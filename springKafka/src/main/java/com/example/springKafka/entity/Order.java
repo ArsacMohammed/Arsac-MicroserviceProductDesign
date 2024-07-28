@@ -18,10 +18,6 @@ public class Order {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long id;
-	
 	public String customerName;
-	
-	
-	@ElementCollection
 	public List<String> orders;
 }
