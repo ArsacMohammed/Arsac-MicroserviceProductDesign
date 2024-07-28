@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.springKafka.dto.OrderDTO;
 import com.example.springKafka.entity.Order;
 import com.example.springKafka.service.OrderService;
 
@@ -34,11 +35,11 @@ public class OrderController {
 	}
 	@GetMapping("/getAllOrder")
     public String getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
+        List<OrderDTO> orders = orderService.getAllOrders();
         if (orders.isEmpty()) {
             LOGGER.info("No orders found.");
         } else {
-            for (Order order : orders) {
+            for (OrderDTO order : orders) {
                 LOGGER.info(order.toString());
             }
         }
@@ -57,7 +58,7 @@ public class OrderController {
 	
 	
 	@GetMapping("/getOrderById/{Id}")
-	public  List<String> getOrderById(@PathVariable Long Id) {
+	public  OrderDTO getOrderById(@PathVariable Long Id) {
 		return orderService.getOrderById(Id);
 		
 	}

@@ -2,6 +2,7 @@ package com.example.springKafka.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,19 +24,23 @@ public class OrderService {
 	}
 
 
-	public List<Order> getAllOrders() {
+	public List<OrderDTO> getAllOrders() {
 		// TODO Auto-generated method stub
-		List<Order> allOrders = new ArrayList<Order>();
-		allOrders =orderRepository.findAll();
+		List<OrderDTO> allOrders = new ArrayList<OrderDTO>();
+		allOrders =orderRepository.findAll().stream()
+				.map(this::convertToDTO)
+				.collect(Collectors.toList());
 		return allOrders;
 		
 	}
 
 
 	@SuppressWarnings("deprecation")
-	public List<String> getOrderById(Long id) {
+	public OrderDTO getOrderById(Long id) {
 		// TODO Auto-generated method stub
-		return orderRepository.getById(id).getOrders();
+		return orderRepository.findById(id)
+				.map(this::convertToDTO)
+				.orElse(null);
 	}
 	
 
