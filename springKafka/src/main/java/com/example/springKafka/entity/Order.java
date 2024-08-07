@@ -1,7 +1,6 @@
 package com.example.springKafka.entity;
 import java.util.List;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,10 +13,10 @@ import lombok.Data;
 @Table(name="orders")
 public class Order {
 	
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long id;
+	
 	public String customerName;
 	public List<String> orders;
 }
