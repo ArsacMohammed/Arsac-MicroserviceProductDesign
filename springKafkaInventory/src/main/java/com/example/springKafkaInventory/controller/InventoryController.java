@@ -4,6 +4,7 @@ import com.example.springKafkaInventory.entity.Inventory;
 import com.example.springKafkaInventory.service.InventoryService;
 import org.apache.kafka.clients.admin.FinalizedVersionRange;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,5 +48,18 @@ public class InventoryController {
         return "Inventory returned successfully";
     }
 
+
+
+    @Value("${springKafka.service.url}")
+    private String springKafkaInventoryServiceUrl;
+
+    public InventoryController(String springKafkaInventoryServiceUrl) {
+        this.springKafkaInventoryServiceUrl = springKafkaInventoryServiceUrl;
+    }
+
+    @GetMapping("/config")
+    public String getConfig() {
+        return "Order Service URL: " + springKafkaInventoryServiceUrl;
+    }
 
 }
