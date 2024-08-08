@@ -32,9 +32,6 @@ public class OrderController {
 	@Value("${springKafka.service.url}")
 	private String springKafkaServiceUrl;
 
-    public OrderController(String springKafkaServiceUrl) {
-        this.springKafkaServiceUrl = springKafkaServiceUrl;
-    }
 
     @GetMapping("/config")
 	public String getConfig() {

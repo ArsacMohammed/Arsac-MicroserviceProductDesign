@@ -18,9 +18,10 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
-    public InventoryController(InventoryService inventoryService){
-        this.inventoryService= inventoryService;
-    }
+
+
+    @Value("${springKafkaInventory.service.url}")
+    private String springKafkaInventoryServiceUrl;
 
 
     @PostMapping("/addToInventory")
@@ -50,12 +51,7 @@ public class InventoryController {
 
 
 
-    @Value("${springKafka.service.url}")
-    private String springKafkaInventoryServiceUrl;
 
-    public InventoryController(String springKafkaInventoryServiceUrl) {
-        this.springKafkaInventoryServiceUrl = springKafkaInventoryServiceUrl;
-    }
 
     @GetMapping("/config")
     public String getConfig() {
