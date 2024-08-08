@@ -47,5 +47,5 @@ public class InventoryController {
         return "Inventory returned successfully";
     }
 
-    
+
 }

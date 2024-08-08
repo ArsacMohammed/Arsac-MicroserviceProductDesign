@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import com.example.springKafka.service.OrderService;
 
 
 
+
 @RestController
 public class OrderController {
 	
@@ -24,14 +26,16 @@ public class OrderController {
 	
 	@Autowired
 	private OrderService orderService;
-	
+
+
 	
 	@PostMapping("/createOrder")
-	public String createOrder(@RequestBody Order order) {
-		orderService.createOrder(order);
-		System.out.println("Received new order: " + order);
-        return "Order received successfully";
-		
+	public String createOrder(@RequestBody OrderDTO orderdto) {
+		OrderDTO savedOrder= orderService.createOrder(orderdto);
+		System.out.println("Received new order: " + savedOrder);
+
+		return "Order received successfully";
+
 	}
 	@GetMapping("/getAllOrder")
     public String getAllOrders() {

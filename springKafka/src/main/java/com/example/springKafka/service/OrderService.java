@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import com.example.springKafka.dto.OrderDTO;
@@ -18,10 +19,29 @@ public class OrderService {
 	
 	@Autowired
 	private OrderDAO orderDAO;
-	
 
-	public  Order createOrder(Order order) {
-		return orderDAO.createOrder(order);
+	@Autowired
+	private KafkaTemplate<String, String> kafkaTemplate;
+
+	private static final String TOPIC = "order_topic";
+
+	public  OrderDTO createOrder(OrderDTO orderdto) {
+		Order order = convertToEntity(orderdto);
+		Order savedOrder = orderDAO.createOrder(order);
+		try{
+			kafkaTemplate.send(TOPIC, "Order created: " + orderdto.getId());
+		}catch(Exception e){
+			System.out.println("kafka producer error - order created message not sent ");
+		}
+		return convertToDTO(savedOrder);
+	}
+
+	private Order convertToEntity(OrderDTO orderdto) {
+		Order order = new Order();
+		order.setId(orderdto.getId());
+		order.setCustomerName(orderdto.getCustomerName());
+		order.setOrders(orderdto.getOrders());
+		return order;
 	}
 
 
