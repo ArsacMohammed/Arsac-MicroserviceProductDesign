@@ -29,7 +29,7 @@ public class OrderService {
 		Order order = convertToEntity(orderdto);
 		Order savedOrder = orderDAO.createOrder(order);
 		try{
-			kafkaTemplate.send(TOPIC, "Order created: " + orderdto.getId());
+			kafkaTemplate.send(TOPIC, "Order created: " + savedOrder.getId());
 		}catch(Exception e){
 			System.out.println("kafka producer error - order created message not sent ");
 		}
