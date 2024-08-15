@@ -5,6 +5,10 @@ import com.example.springKafkaInventory.service.InventoryService;
 import org.apache.kafka.clients.admin.FinalizedVersionRange;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.CircuitBreaker;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,22 +35,23 @@ public class InventoryController {
 
 
     @GetMapping("/getAllInventories")
-    public String getAllInventories(){
+    public ResponseEntity<List<InventoryDTO>> getAllInventories(){
 
         try{
             List<InventoryDTO> allInventories = inventoryService.getAllInventories();
+
             if (allInventories.isEmpty()){
-                return "Inventory Empty ....";
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }else{
                 for (InventoryDTO items : allInventories){
                     System.out.println(items.toString());
                 }
+                return new ResponseEntity<>(allInventories,HttpStatus.OK);
             }
         }catch (Exception e){
-            return "Something gone wrong while executing getting all the inventories :: ";
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 
         }
-        return "Inventory returned successfully";
     }
 
 
