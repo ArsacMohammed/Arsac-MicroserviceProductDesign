@@ -36,6 +36,18 @@ public class OrderService {
 		return convertToDTO(savedOrder);
 	}
 
+
+	public  boolean  checkKafkaMessageTransferAfterSecurity () {
+		try {
+			kafkaTemplate.send(TOPIC, "Kafka message from order: ");
+			return true;
+		} catch (Exception e) {
+			System.out.println("kafka producer error - order created message not sent ");
+			return false;
+		}
+	}
+
+
 	private Order convertToEntity(OrderDTO orderdto) {
 		Order order = new Order();
 		order.setId(orderdto.getId());

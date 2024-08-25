@@ -52,6 +52,14 @@ public class OrderController {
 	public String getConfig() {
 		return "Order Service URL: " + springKafkaServiceUrl;
 	}
+
+	@GetMapping("sendKafkaMsg")
+	public String sendKafkaMessage(){
+		if (orderService.checkKafkaMessageTransferAfterSecurity()){
+			return "got that message";
+		}
+		return "kafka not send some security issues";
+	}
 	
 	@PostMapping("/createOrder")
 	public String createOrder(@RequestBody OrderDTO orderdto) {
@@ -61,6 +69,10 @@ public class OrderController {
 		return "Order received successfully";
 
 	}
+
+
+
+
 	@GetMapping("/getAllOrder")
     public String getAllOrders() {
         List<OrderDTO> orders = orderService.getAllOrders();
