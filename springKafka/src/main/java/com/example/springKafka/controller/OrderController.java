@@ -30,7 +30,7 @@ public class OrderController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OrderController.class);
 	
 	@Autowired
-	private OrderService orderService;
+	public OrderService orderService;
 
 
 	@Value("${springKafka.service.url}")
@@ -89,8 +89,7 @@ public class OrderController {
 	public String getTestData() {
 		return "SUCCESS";
 	}
-	
-	
+
 	@GetMapping("/getOrderById/{Id}")
 	public  OrderDTO getOrderById(@PathVariable Long Id) {
 		return orderService.getOrderById(Id);

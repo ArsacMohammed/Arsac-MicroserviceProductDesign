@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -44,22 +45,26 @@ public class OrderService {
 		return order;
 	}
 
-
+	@Cacheable(value = "orders")
 	public List<OrderDTO> getAllOrders() {
+
 		// TODO Auto-generated method stub
 		List<OrderDTO> allOrders = new ArrayList<OrderDTO>();
 		allOrders =orderDAO.getAllOrders().stream()
 				.map(this::convertToDTO)
 				.collect(Collectors.toList());
+		System.out.println("not from cache , rather from method");
+
 		return allOrders;
 		
 	}
 
 
 	@SuppressWarnings("deprecation")
-	public OrderDTO getOrderById(Long id) {
+	@Cacheable(value = "ordersWithId", key = "#Id")
+	public OrderDTO getOrderById(Long Id) {
 		// TODO Auto-generated method stub
-		return orderDAO.getOrderById(id)
+		return orderDAO.getOrderById(Id)
 				.map(this::convertToDTO)
 				.orElse(null);
 	}
