@@ -1,0 +1,29 @@
+version: '3'
+services:
+  eureka-server:
+    build:
+      context: ./EurekaServer/EurekaServer
+      dockerfile: Dockerfile
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - my-network
+
+  config-server:
+    build:
+      context: ./configServer/configServer
+      dockerfile: Dockerfile
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - my-network
+    depends_on:
+      - eureka-server
+
+networks:
+  my-network:
+    driver: bridge
