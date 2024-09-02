@@ -1,4 +1,3 @@
-version: '3'
 services:
   eureka-server:
     build:
@@ -9,6 +8,11 @@ services:
       - "8761:8761"
     networks:
       - my-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://eureka-server:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   config-server:
     build:
@@ -22,7 +26,35 @@ services:
     networks:
       - my-network
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://config-server:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  gateway-server:
+    build:
+      context: ./ApiGateway
+      dockerfile: Dockerfile
+    container_name: gateway-server
+    ports:
+      - "9090:9090"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    networks:
+      - my-network
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      config-server :
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://gateway-server:9090/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   my-network:
