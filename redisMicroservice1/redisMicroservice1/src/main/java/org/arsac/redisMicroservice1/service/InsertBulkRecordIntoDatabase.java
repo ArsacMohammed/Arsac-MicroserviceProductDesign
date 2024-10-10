@@ -1,10 +1,14 @@
 package org.arsac.redisMicroservice1.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.arsac.redisMicroservice1.entity.Product;
 import org.arsac.redisMicroservice1.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.connection.stream.MapRecord;
+import org.springframework.data.redis.connection.stream.StreamRecords;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityManager;
@@ -52,4 +56,27 @@ public class InsertBulkRecordIntoDatabase {
  * Decided to go with 100 batch size , Avg time taken 6.5 sec
  */
 
+
+
+
+/*
+ * 
+ * Producing  to redis stream.
+ * 	String message = String.format("Processing file: %s, appName: %s, appRunId: %s", 
+	                    filePath, appName, appRunId);
+				
+	Map<String,String> messageForRedis = new HashMap<>();
+	messageForRedis.put(filePath, message);
+	messageForRedis.put("filePath", filePath);
+	messageForRedis.put("message", message);
+	
+	// append message through RedisTemplate
+	MapRecord<String, String , String > record = StreamRecords.string(messageForRedis).withStreamKey("targetPotentialSqlFiles");
+	redisTemplate.opsForStream().add(record);
+	
+	System.out.println("Produced task for file: " + filePath);
+
+				
+}
+ */
 
