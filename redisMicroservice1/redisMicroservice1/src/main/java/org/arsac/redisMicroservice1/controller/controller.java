@@ -1,10 +1,11 @@
 package org.arsac.redisMicroservice1.controller;
 
-import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.arsac.redisMicroservice1.service.ConcurrentHashMapRedisAlternative;
 import org.arsac.redisMicroservice1.service.InsertBulkRecordIntoDatabase;
+import org.arsac.redisMicroservice1.service.MultipleProcessing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,11 +20,13 @@ public class controller {
 	@Autowired
 	private ConcurrentHashMapRedisAlternative concurrentHashMapRedisAlternative;
 
-	
-	@Autowired 
+	@Autowired
 	private InsertBulkRecordIntoDatabase insertBulkRecordIntoDatabase;
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private MultipleProcessing taskService;
 
 //	@GetMapping("/api/call-hello")
 //	public String callHelloWorldApi() {
@@ -37,38 +40,51 @@ public class controller {
 //			return "Error occurred: " + e.getMessage();
 //		}
 //	}
-	
+
+	@GetMapping("/runTasks")
+	public String runTasks() throws Exception {
+		Long startTime=System.currentTimeMillis();
+		CompletableFuture<String> task1 = taskService.processTask1();
+		CompletableFuture<String> task2 = taskService.processTask2();
+
+		// Wait for both tasks to complete
+		CompletableFuture.allOf(task1, task2).join();
+		Long endTime=System.currentTimeMillis();
+		Long timeTaken= endTime-startTime;
+		System.out.println("Time taken by async is :: "+timeTaken);
+		return "Both Tasks Completed: " + task1.get() + ", " + task2.get();
+	}
+
 	@GetMapping("/api/insertRecord")
 	public String insertRecord() {
 		insertBulkRecordIntoDatabase.insertRecord();
 		return "sucessfully inserted the records";
 	}
-	
+
 	@GetMapping("/putValueInCache/{mapName}")
-	public String  putValueInCache(@PathVariable String mapName) {
+	public String putValueInCache(@PathVariable String mapName) {
 		return concurrentHashMapRedisAlternative.putValue(mapName);
-		
+
 	}
-	
-	
+
 	@GetMapping("/{mapName}/{key}")
-    public Object getValue(@PathVariable String mapName, @PathVariable String key) {
-        return concurrentHashMapRedisAlternative.getValue(mapName, key);
-    }
+	public Object getValue(@PathVariable String mapName, @PathVariable String key) {
+		return concurrentHashMapRedisAlternative.getValue(mapName, key);
+	}
 
-    @DeleteMapping("/{mapName}/{key}")
-    public void removeValue(@PathVariable String mapName, @PathVariable String key) {
-        concurrentHashMapRedisAlternative.removeValue(mapName, key);
-    }
+	@DeleteMapping("/{mapName}/{key}")
+	public void removeValue(@PathVariable String mapName, @PathVariable String key) {
+		concurrentHashMapRedisAlternative.removeValue(mapName, key);
+	}
 
-    @GetMapping("/{mapName}")
-    public String  getAllEntries(@PathVariable String mapName) {
-        return concurrentHashMapRedisAlternative.getAllEntries(mapName);
-    }
+	@GetMapping("/{mapName}")
+	public String getAllEntries(@PathVariable String mapName) {
+		return concurrentHashMapRedisAlternative.getAllEntries(mapName);
+	}
 
-    @PostMapping("/{mapName}/expire")
-    public void setExpiry(@PathVariable String mapName, @RequestParam long timeout) {
-        concurrentHashMapRedisAlternative.setExpiry(mapName, timeout, TimeUnit.MINUTES);
-    }
+	@PostMapping("/{mapName}/expire")
+	public void setExpiry(@PathVariable String mapName, @RequestParam long timeout) {
+		concurrentHashMapRedisAlternative.setExpiry(mapName, timeout, TimeUnit.MINUTES);
+	}
 
 }
