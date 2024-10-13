@@ -19,4 +19,26 @@ public class MultipleProcessing {
 		Thread.sleep(3000); // Simulating a longer-running task
 		return CompletableFuture.completedFuture("Task 2 Completed");
 	}
+	
+	
+	
+	@Async
+	public CompletableFuture<String> fetchUserData() throws InterruptedException{
+		Thread.sleep(3000);
+		return CompletableFuture.completedFuture("user data  fetched.");
+	}
+	
+	
+	@Async
+	public CompletableFuture<String> fetchOrderData() throws InterruptedException{
+		Thread.sleep(2000);
+		return CompletableFuture.completedFuture("user data  fetched.");
+	}
+	
+	@Async
+	public CompletableFuture<String> processingData(String userData,String orderData) throws InterruptedException{
+		Thread.sleep(4000);
+		return CompletableFuture.completedFuture("processing  data  fetched :: "+userData + " :: "+orderData);
+	}
+	
 }
