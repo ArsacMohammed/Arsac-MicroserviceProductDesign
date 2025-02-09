@@ -1,7 +1,7 @@
-# 🚀 Arsac Microservice Product Design
+# 🚀 Microservice Product Design
 
 ## 🌟 Overview
-Arsac Microservice Product Design is a **highly scalable, modular, and cloud-ready microservices architecture** built with **Java, Spring Boot, and Docker**. Designed for efficiency, resilience, and seamless deployment, this project follows industry best practices to deliver **fault-tolerant, high-performance applications**.
+ Microservice Product Design is a **highly scalable, modular, and cloud-ready microservices architecture** built with **Java, Spring Boot, and Docker**. Designed for efficiency, resilience, and seamless deployment, this project follows industry best practices to deliver **fault-tolerant, high-performance applications**.
 
 ## ✨ Features
 ✅ **Microservices Architecture** – Independent, scalable, and loosely coupled services.  
